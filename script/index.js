@@ -1,5 +1,14 @@
 console.log("index is connected")
 
+const showLoader = () => {
+    document.getElementById("loader").classList.remove("hidden");
+    document.getElementById("video-container").classList.add("hidden");
+}
+const hideLoader = () => {
+    document.getElementById("loader").classList.add("hidden");
+    document.getElementById("video-container").classList.remove("hidden");
+}
+
 function removeActiveClass() {
     const activeButtons = document.getElementsByClassName("active");
     for (let btn of activeButtons) {
@@ -24,6 +33,7 @@ function loadCatagoris() {
 }
 
 function loadVideos(searchText = " ") {
+    showLoader();
     fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`)
         .then(response => response.json())
         .then(data => {
@@ -35,6 +45,7 @@ function loadVideos(searchText = " ") {
 }
 //1001
 const loadCategoryVideos = (id) => {
+    showLoader();
     const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`;
     console.log(url);
 
@@ -71,7 +82,7 @@ const displayVideosDetails = (video) => {
   </figure>
   <div class="card-body">
     <h2>Video title: ${video.title}</h2>
-    <p>Author Name: ${video.authors[0]?.profile_name||"unknown author"}</p>
+    <p>Author Name: ${video.authors[0]?.profile_name || "unknown author"}</p>
     
    
   </div>
@@ -132,6 +143,7 @@ const displayVideos = (videos) => {
         <h2 class="text-2xl font-bold">Oops!! Sorry, There is no content here</h2>
        </div>
         `;
+        hideLoader();
         return;
     }
 
@@ -158,7 +170,7 @@ const displayVideos = (videos) => {
                     <h2 class="text-sm font-semibold">Midnight Serenade</h2>
                     <p class="text-sm text-gray-400 flex gap-1">
                     ${video.authors[0].profile_name}
-                    ${video.authors[0].verified == true ? `<img class="w-5 h-5" src="https://img.icons8.com/?size=48&id=98A4yZTt9abw&format=png" alt=""> `: ``}
+                    ${video.authors[0].verified == true ? `<img class="w-5 h-5" src="https://img.icons8.com/?size=48&id=98A4yZTt9abw&format=png" alt=""> ` : ``}
                        
                     </p>
                     <p class="text-sm text-gray-400">${video.others.views} views</p>
@@ -170,13 +182,12 @@ const displayVideos = (videos) => {
         `
         //append
         videoContainer.append(videoCard);
-
     });
-
+    hideLoader();
 }
 
-document.getElementById("search-input").addEventListener('keyup',(e)=>{
-    const input= e.target.value;
+document.getElementById("search-input").addEventListener('keyup', (e) => {
+    const input = e.target.value;
     loadVideos(input);
 })
 
